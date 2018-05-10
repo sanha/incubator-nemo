@@ -36,7 +36,7 @@ public final class CoGroup {
   }
 
   public static <K, V> PairFunction<Tuple2<K, V>, K, Union> mapFunction(final int index) {
-    return new MapToUnionFunction<>(index);
+    return new MapToUnionFunction(index);
   }
 
   public static <K, V, W> Transform<Tuple2<K, Union>, Tuple2<K, Tuple2<Iterable<V>, Iterable<W>>>> coGroupTransform() {
@@ -46,13 +46,13 @@ public final class CoGroup {
   /**
    * Union class for co-group operation.
    */
-  public static final class Union implements Serializable {
+  public static final class Union<T extends Serializable> implements Serializable {
 
     private final int index;
-    private final Double value;
+    private final T value;
 
     private Union(final int index,
-                  final Double value) {
+                  final T value) {
       this.index = index;
       this.value = value;
     }
@@ -72,7 +72,8 @@ public final class CoGroup {
    * @param <K> key type.
    * @param <V> value type.
    */
-  public static final class MapToUnionFunction<K, V> implements PairFunction<Tuple2<K, V>, K, Union> {
+  public static final
+  class MapToUnionFunction<K, V extends Serializable> implements PairFunction<Tuple2<K, V>, K, Union> {
     private final int index;
 
     /**
@@ -87,7 +88,7 @@ public final class CoGroup {
 
     @Override
     public Tuple2<K, Union> call(final Tuple2<K, V> element) throws Exception {
-      return new Tuple2<>(element._1, new Union(index, (Double) element._2));
+      return new Tuple2<>(element._1, new Union<>(index, element._2));
     }
   }
 
