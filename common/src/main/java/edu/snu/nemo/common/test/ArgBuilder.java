@@ -31,7 +31,7 @@ public final class ArgBuilder {
    */
   public ArgBuilder() {
     this.args = new ArrayList<>();
-    this.args.add(Arrays.asList("-executor_json", "../resources/sample_executor_resources.json"));
+    this.args.add(Arrays.asList("-executor_json", "../resources/sample_executor_resources_sail.json"));
   }
 
   /**

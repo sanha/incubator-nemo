@@ -265,6 +265,7 @@ public final class DataUtil {
         try {
           if (encodedCountingStream == null) {
             if (inputStreams.hasNext()) {
+              LOG.info("New Stream!");
               serializedCountingStream = new CountingInputStream(inputStreams.next());
               encodedCountingStream = new CountingInputStream(buildInputStream(
                   serializedCountingStream, serializer.getStreamChainers()));
@@ -278,7 +279,10 @@ public final class DataUtil {
           throw new RuntimeException(e);
         }
         try {
+          final long start = System.nanoTime();
           next = serializer.getCoder().decode(encodedCountingStream);
+          final long end = System.nanoTime();
+          LOG.info("Decode time " + (end - start));
           hasNext = true;
           return true;
         } catch (final IOException e) {
